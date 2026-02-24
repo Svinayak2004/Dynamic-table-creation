@@ -27,12 +27,7 @@ const Signup = () => {
       toast.success(res.data.message);
       navigate('/login');
     } catch (err) {
-      const remoteMsg = err?.response?.data?.message;
-      const text =
-        typeof remoteMsg === "string"
-          ? remoteMsg
-          : remoteMsg?.message || (remoteMsg ? JSON.stringify(remoteMsg) : null) || err.message || "Signup failed. Please try again.";
-      toast.error(text);
+      toast.error(err.response?.data?.message || err.message || "Signup failed. Please try again.");
       console.log(err.message);
     }
   }

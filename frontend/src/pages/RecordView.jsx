@@ -54,7 +54,7 @@ const RecordView = () => {
         <p key={key}>
           <b>{key}</b>: {value}
         </p>
-      ))}
+      ))} 
 
       
       <button onClick={deleteRecord} className="bg-red-600 hover:bg-red-700 text-white w-20 py-2 rounded-md items-center mt-2">Delete</button>
