@@ -11,9 +11,9 @@ export const createColumns = asyncHandler(async (req, res) => {
     }
 
     if (!Array.isArray(columns)) columns = [columns];
-
+    console.log(columns)
     const editedColumn = columns.map(col => ({ ...col, table: tableId }));
-
+    console.log("col : ", editedColumn)
     const savedColumns = await Column.insertMany(editedColumn);
 
     res.status(201).json({

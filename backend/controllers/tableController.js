@@ -19,7 +19,7 @@ export const createTable = asyncHandler(async(req, res) => {
 
 export const getTables = asyncHandler(async(req, res) => {
     
-    const table = await Table.find({});
+    const table = await Table.find({user : req.user.id});
     if(!table){
         res.status(400);
         throw new Error("table not found")
@@ -27,7 +27,7 @@ export const getTables = asyncHandler(async(req, res) => {
     
     res.status(201).json({
         success : true,
-        message : 'table is created',
+        message : 'tables fetched',
         data : table
     })
 });
@@ -41,7 +41,7 @@ export const getTable = asyncHandler(async(req, res) => {
     
     res.status(201).json({
         success : true,
-        message : 'table is created',
+        message : 'table is fetched',
         data : table
     })
 });

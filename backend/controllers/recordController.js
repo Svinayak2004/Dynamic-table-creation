@@ -92,22 +92,28 @@ export const deleteRecord = asyncHandler(async (req, res) => {
 
 // edit record
 export const editRecord = asyncHandler(async (req, res) => {
-    if(!req.params.recordId) {
+
+    const recordId = req.params.recordId;
+    if (!recordId) {
         res.status(400);
-        throw new Error('recordId param is required');
+        throw new Error("recordId param is required");
     }
-    const data = req.body;
-    const record = await Record.findById(req.params.recordId);
+
+    const record = await Record.findById(recordId);
     if (!record) {
         res.status(404);
-        throw new Error('record not found');
+        throw new Error("record not found");
     }
-    const updatedRecord = await Record.findByIdAndUpdate(req.params.recordId, { data }, { new: true });
+
+    // frontend sends only updated form data
+    const updatedData = req.body;
+
+    record.data = updatedData;
+    await record.save();
+
     res.status(200).json({
         success: true,
-        message: 'record updated',
-        data: updatedRecord
+        message: "record updated",
+        data: record
     });
-}); 
-
-// 699bfd1e2a5c50c835cd2344
+});

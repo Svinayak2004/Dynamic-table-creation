@@ -9,13 +9,12 @@ const columnSchema = new mongoose.Schema({
     },
     columnName : {
         type:String,
-        required : true,
-        unique : true
+        required : true
     },
     
     dataType : {
-        type:String,
-        enum : ['text', 'number', 'boolean', 'date'],
+        type:String,            
+        enum : ['string', 'number', 'boolean', 'date'],
         required : true
     },
     constraints : {
@@ -33,10 +32,6 @@ const columnSchema = new mongoose.Schema({
     inputType : {
         type:String,
         required : true
-    },
-    required : {
-        type:Boolean,
-        defalt : false
     },
     label : {
         type:String,
