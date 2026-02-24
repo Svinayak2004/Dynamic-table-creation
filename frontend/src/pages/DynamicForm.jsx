@@ -1,39 +1,58 @@
 import { useEffect, useState } from "react";
-import api from "../axios/api.js";
+import api from "../axios/api";
 import { useParams } from "react-router-dom";
-import DynamicInput from "../components/DynamicInput.jsx";
+import DynamicInput from "../components/DynamicInput";
 
 const DynamicForm = () => {
   const { tableId } = useParams();
+
   const [columns, setColumns] = useState([]);
   const [data, setData] = useState({});
 
-  const fetchColumns = async () => {
-    const res = await api.get(`/columns/${tableId}`);
-    setColumns(res.data.data);
-    console.log("Columns loaded:", res.data.data);
-  };
- 
+  // load columns
   useEffect(() => {
-    fetchColumns();
-  }, []);
+    const fetchColumns = async () => {
+      try {
+        const res = await api.get(`/columns/${tableId}`);
+        setColumns(res.data.data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
 
+    fetchColumns();
+  }, [tableId]);
+
+  // submit record
   const submit = async () => {
-    await api.post(`/records/${tableId}`, data);
-    setData({});
-    alert("Record added");
+    try {
+      await api.post(`/records/${tableId}`, data);
+      alert("Record added");
+      setData({});
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
-    <div className="flex flex-col gap-4 p-6 border-2 bg-gray-50 w-150 justify-center items-center ">
+    <div className="flex flex-col gap-4 p-6 bg-gray-50 border rounded w-fit">
       <h2 className="text-xl font-bold">Add Record</h2>
 
-
-      {columns.map((col) => (
-        <DynamicInput key={col.id} column={col} setData={setData} />
+      {columns.map(col => (
+        <DynamicInput
+          key={col._id}
+          column={col}
+          value={data[col.columnName] || ""}
+          setData={setData}
+        />
       ))}
 
-      <button onClick={submit} className ="bg-green-600 hover:bg-green-700 text-white w-20 py-2 rounded-md items-center">Save</button>
+      <button
+        onClick={submit}
+        className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+      >
+        Save
+      </button>
     </div>
   );
 };

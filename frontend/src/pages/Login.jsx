@@ -22,6 +22,7 @@ const Login = () => {
     e.preventDefault();
     try{
       const res = await API.post('/auth/login', formData);
+      navigate('/tables');
       toast.success(res.data.message);
     } catch (err) {
       toast.error(err.response?.data?.message || err.message || "Login failed. Please try again.");

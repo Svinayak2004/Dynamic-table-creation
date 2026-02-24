@@ -47,7 +47,7 @@ const RecordsList = () => {
                     </pre>
                   </div>
                   <button
-                    onClick={() => navigate(`/record/${r._id}`)}
+                    onClick={() => navigate(`/records/view/${r._id}`)}
                     className="ml-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-medium transition whitespace-nowrap"
                   >
                     View

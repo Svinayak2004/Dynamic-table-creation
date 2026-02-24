@@ -10,6 +10,7 @@ import TablesList from "./pages/TablesList";
 import RecordsList from "./pages/RecordList";
 import DynamicForm from "./pages/DynamicForm";
 import RecordView from "./pages/RecordView";
+import EditRecord from "./pages/EditRecord"
 
 const App = () => {
   return (
@@ -18,12 +19,13 @@ const App = () => {
       <Navbar />
 
       <Routes>
-        <Route path="/" element={<TablesList />} />
+        <Route path="/tables" element={<TablesList />} />
         <Route path="/create-table" element={<CreateTable />} />
-        <Route path="/record/:recordId" element={<RecordView />} />
+        <Route path="/records/edit/:recordId" element={<EditRecord />} />
+        <Route path="/records/view/:recordId" element={<RecordView />} />
         <Route path="/records/:tableId" element={<RecordsList />} />
         <Route path="/form/:tableId" element={<DynamicForm />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
       </Routes>
     </BrowserRouter>

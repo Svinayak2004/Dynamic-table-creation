@@ -64,7 +64,7 @@ const Signup = () => {
           className='p-1 items-center border-2'
         />
         <button type="submit" className='border-2 rounded-sm bg-blue-500 hover:bg-blue-400 p-1'>Signup</button>
-        already have an account? <span className='text-blue-500 cursor-pointer hover:underline' onClick={() => navigate('/login')}>Login</span>
+        already have an account? <span className='text-blue-500 cursor-pointer hover:underline' onClick={() => navigate('/')}>Login</span>
       </form>
     </div>
   )

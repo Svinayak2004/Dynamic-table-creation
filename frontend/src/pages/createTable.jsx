@@ -1,20 +1,20 @@
 import { useState } from "react";
 import API from "../axios/api";
 import AddColumn from "../components/AddColumn";
+import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
 export default function CreateTable() {
+  const navigate = useNavigate();
   const [tableName, setTableName] = useState("");
   const [columns, setColumns] = useState([]);
 
-  // Build the payload exactly like you showed.
   const buildPayload = () =>
-    columns.map((c) => ({
+    columns.map(c => ({
       columnName: c.columnName,
       dataType: c.dataType,
       inputType: c.inputType,
       label: c.label,
-      // constraints must be strings "true" / "false"
       constraints: {
         required: String(!!c.constraints?.required),
         unique: String(!!c.constraints?.unique),
@@ -23,49 +23,60 @@ export default function CreateTable() {
 
   const createTable = async () => {
     if (!tableName) return toast.error("Table name is required");
-    if (!columns || columns.length === 0) return toast.error("Add at least one column");
+    if (!columns.length) return toast.error("Add at least one column");
 
     const columnPayload = buildPayload();
 
-    if (columnPayload.some((c) => !c.columnName)) return toast.error("Column name cannot be empty");
+    if (columnPayload.some(c => !c.columnName))
+      return toast.error("Column name cannot be empty");
 
     try {
-      // 1) create table (backend expects `tableName`)
-      const tableRes = await API.post("/tables", { tableName: tableName });
+      const tableRes = await API.post("/tables", { tableName });
 
-      // 2) send all columns in one request
-      await API.post(`/columns/${tableRes.data._id}`, columnPayload);
+      const tableId = tableRes?.data?.data?._id;
+      await API.post(`/columns/${tableId}`, columnPayload);
 
       toast.success("Table and columns created successfully");
       setTableName("");
       setColumns([]);
+      navigate('/records/:tableId');
     } catch (err) {
       const errData = err?.response?.data;
-      // If Mongo reports a duplicate key (11000) or provides keyValue.tableName, show a friendly message
+
       if (errData?.code === 11000 || errData?.keyValue?.tableName) {
         const name = errData?.keyValue?.tableName || tableName;
-        toast.error(`Table name "${name}" already exists. Choose another name.`);
+        toast.error(`Table "${name}" already exists`);
       } else {
-        const msg = errData?.message || err.message || "Failed to create table";
-        toast.error(typeof msg === "string" ? msg : JSON.stringify(msg));
+        toast.error(errData?.message || "Failed to create table");
       }
     }
   };
 
   return (
     <form
-      onSubmit={(e) => {
+      onSubmit={e => {
         e.preventDefault();
         createTable();
       }}
+      className="max-w-xl mx-auto mt-10 p-6 border rounded-lg shadow-sm bg-white space-y-5"
     >
-      <h2>Create Table</h2>
+      <h2 className="text-xl font-bold text-center">Create Table</h2>
 
-      <input placeholder="Table Name" value={tableName} onChange={(e) => setTableName(e.target.value)} />
+      <input
+        className="w-full border p-2 rounded"
+        placeholder="Table Name"
+        value={tableName}
+        onChange={e => setTableName(e.target.value)}
+      />
 
       <AddColumn columns={columns} setColumns={setColumns} />
 
-      <button type="submit">Create Table</button>
+      <button
+        type="submit"
+        className="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600"
+      >
+        Create Table
+      </button>
     </form>
   );
 }
