@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../axios/api";
+import toast from "react-hot-toast";
 import { useParams, useNavigate } from "react-router-dom";
 
 const RecordsList = () => {
@@ -17,7 +18,7 @@ const RecordsList = () => {
   }, [tableId]);
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
+    <div className="p-6 bg-gradient-to-l from-blue-100 to-purple-400 min-h-screen">
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-3xl font-bold text-gray-800">Records</h2>

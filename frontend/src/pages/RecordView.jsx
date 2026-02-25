@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../axios/api";
-import { useParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const RecordView = () => {
   const { recordId } = useParams();
@@ -13,11 +13,10 @@ const RecordView = () => {
       const res = await api.get(`/records/get/${recordId}`);
       console.log("Record loaded:", res.data.data);
       setRecord(res.data.data);
-    }
-    catch (err) {
+    } catch (err) {
       console.error("Error loading record:", err);
     }
-  }
+  };
   useEffect(() => {
     fetchRecord();
   }, [recordId]);
@@ -26,49 +25,53 @@ const RecordView = () => {
     if (window.confirm("Are you sure you want to delete this record?")) {
       try {
         await api.delete(`/records/${recordId}`);
-        alert("Record deleted");
-        navigate(-1)
-
+        toast.success("Record deleted");
+        navigate(-1);
       } catch (err) {
         console.error("Error deleting record:", err);
       }
     }
   };
 
-  const editRecord = async () => {
-    try {
-      await api.put(`/records/${recordId}`, record.data);
-      alert("Record updated");
-      navigate(-1);
-    } catch (err) {
-      console.error("Error updating record:", err);
-    }
-  }
-
   if (!record) return null;
 
   return (
-    <div className="flex flex-col p-6 bg-gray-50 min-h-screen">
-      <h2 className="text-xl font-bold mb-4">Record</h2>
-      {Object.entries(record.data).map(([key, value]) => (
-        <p key={key}>
-          <b>{key}</b>: {value}
-        </p>
-      ))}
-
-
-      <div className="flex gap-5">
-        <button onClick={deleteRecord} className="bg-red-600 hover:bg-red-700 text-white w-20 py-2 rounded-md items-center mt-2">Delete</button>
-
-        <button
-          onClick={() => navigate(`/records/edit/${recordId}`)}
-          className="bg-blue-600 hover:bg-blue-700 text-white w-20 py-2 rounded-md mt-2"
+    <div className="flex flex-col p-6 bg-gradient-to-l from-blue-100 to-purple-400 min-h-screen ">
+      <div className="flex flex-col mt-30 mx-auto p-6 bg-gray-100 border rounded-md w-fit">
+        <div className="flex items-center justify-between mb-4">
+          <span className="text-xl font-bold">Record</span>
+        <span
+          className="cursor-pointer text-blue-600 hover:underline"
+          onClick={() => navigate(-1)}
         >
-          Edit
-        </button>
+          go back
+        </span>
+        </div>
+
+        {Object.entries(record.data).map(([key, value]) => (
+          <p key={key}>
+            <b>{key}</b>: {value}
+          </p>
+        ))}
+
+        <div className="flex gap-5 mt-5">
+          <button
+            onClick={deleteRecord}
+            className="bg-red-600 hover:bg-red-700 text-white w-20 py-2 rounded-md items-center mt-2"
+          >
+            Delete
+          </button>
+
+          <button
+            onClick={() => navigate(`/records/edit/${recordId}`)}
+            className="bg-blue-600 hover:bg-blue-700 text-white w-20 py-2 rounded-md mt-2"
+          >
+            Edit
+          </button>
+        </div>
       </div>
     </div>
   );
-}
+};
 
 export default RecordView;

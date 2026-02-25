@@ -13,14 +13,14 @@ export const createRecord = asyncHandler(async (req, res) => {
     const data = req.body;
     const columns = await Column.find({ table: tableId });
     console.log(columns.constriants);
-    // validate requred constriants 
+    // required field 
     for (let column of columns) {
         if (column.constraints.required && (data[column.columnName] === null || data[column.columnName] === "" || data[column.columnName] === undefined)) {
             res.status(400);
             throw new Error(`column ${column.columnName} is required`);
         }
     }
-    //validate unique constraints
+    //unique field
     for (let column of columns) {
         if(column.constraints.unique){
             const existingRecord = await Record.findOne({ table: tableId, [`data.${column.columnName}`]: data[column.columnName] });
@@ -105,7 +105,6 @@ export const editRecord = asyncHandler(async (req, res) => {
         throw new Error("record not found");
     }
 
-    // frontend sends only updated form data
     const updatedData = req.body;
 
     record.data = updatedData;

@@ -1,73 +1,107 @@
-import React from 'react'
-import API from '../axios/api';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import toast from 'react-hot-toast';
+import React from "react";
+import API from "../axios/api";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const Signup = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: ''
+    name: "",
+    email: "",
+    password: "",
   });
 
   const handelChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
-    })
-  }
+      [e.target.name]: e.target.value,
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try{
-      const res = await API.post('/auth/signup', formData);
+    try {
+      const res = await API.post("/auth/signup", formData);
       console.log(res.data);
       toast.success(res.data.message);
-      navigate('/login');
+      navigate("/login");
     } catch (err) {
-      toast.error(err.response?.data?.message || err.message || "Signup failed. Please try again.");
+      toast.error(
+        err.response?.data?.message ||
+          err.message ||
+          "Signup failed. Please try again.",
+      );
       console.log(err.message);
     }
-  }
+  };
 
   return (
-    <div className='flex flex-col items-center justify-center h-screen w-full  bg-gray-100'>
-      <form onSubmit={handleSubmit} className = "flex flex-col gap-4 border-2 p-4 rounded-sm w-98 bg-white shadow-md">
-        <h1 className='text-2xl font-bold items-center'>Create an Account</h1>
-        <input
-          type="name"
-          name="name"
-          placeholder="Name"
-          value={formData.name}
-          onChange={handelChange}
-          required
-          className='p-1 items-center border-2'
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handelChange}
-          required
-          className='p-1 items-center border-2'
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={handelChange}
-          required
-          className='p-1 items-center border-2'
-        />
-        <button type="submit" className='border-2 rounded-sm bg-blue-500 hover:bg-blue-400 p-1'>Signup</button>
-        already have an account? <span className='text-blue-500 cursor-pointer hover:underline' onClick={() => navigate('/')}>Login</span>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-l from-blue-100 to-purple-400">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white w-full max-w-md p-8 rounded-2xl shadow-lg space-y-6"
+      >
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-800">
+            Create Account
+          </h1>
+          <p className="text-gray-500 text-sm mt-1">
+            Sign up to start managing your tables
+          </p>
+        </div>
+
+        <div className="space-y-4">
+          <input
+            type="text"
+            name="name"
+            placeholder="Enter your name"
+            value={formData.name}
+            onChange={handelChange}
+            required
+            className="w-full px-4 py-2 border rounded-md"
+          />
+
+          <input
+            type="email"
+            name="email"
+            placeholder="Enter your email"
+            value={formData.email}
+            onChange={handelChange}
+            required
+            className="w-full px-4 py-2 border rounded-md"
+          />
+
+          <input
+            type="password"
+            name="password"
+            placeholder="Create a password"
+            value={formData.password}
+            onChange={handelChange}
+            required
+            className="w-full px-4 py-2 border rounded-md focus:ring-blue-400 transition"
+          />
+        </div>
+
+        <button
+          type="submit"
+          className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition duration-200 font-medium"
+        >
+          Signup
+        </button>
+
+        <p className="text-center text-sm text-gray-600">
+          Already have an account?{" "}
+          <span
+            onClick={() => navigate("/login")}
+            className="text-blue-500 font-medium cursor-pointer hover:underline"
+          >
+            Login
+          </span>
+        </p>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default Signup
+export default Signup;

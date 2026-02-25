@@ -10,7 +10,7 @@ export default function CreateTable() {
   const [columns, setColumns] = useState([]);
 
   const buildPayload = () =>
-    columns.map(c => ({
+    columns.map((c) => ({
       columnName: c.columnName,
       dataType: c.dataType,
       inputType: c.inputType,
@@ -27,7 +27,7 @@ export default function CreateTable() {
 
     const columnPayload = buildPayload();
 
-    if (columnPayload.some(c => !c.columnName))
+    if (columnPayload.some((c) => !c.columnName))
       return toast.error("Column name cannot be empty");
 
     try {
@@ -39,44 +39,40 @@ export default function CreateTable() {
       toast.success("Table and columns created successfully");
       setTableName("");
       setColumns([]);
-      navigate('/records/:tableId');
+      navigate(`/records/${tableId}`);
     } catch (err) {
       const errData = err?.response?.data;
-
-      if (errData?.code === 11000 || errData?.keyValue?.tableName) {
-        const name = errData?.keyValue?.tableName || tableName;
-        toast.error(`Table "${name}" already exists`);
-      } else {
-        toast.error(errData?.message || "Failed to create table");
-      }
+      toast.error(errData?.message || "Failed to create table");
     }
   };
 
   return (
-    <form
-      onSubmit={e => {
-        e.preventDefault();
-        createTable();
-      }}
-      className="max-w-xl mx-auto mt-10 p-6 border rounded-lg shadow-sm bg-white space-y-5"
-    >
-      <h2 className="text-xl font-bold text-center">Create Table</h2>
-
-      <input
-        className="w-full border p-2 rounded"
-        placeholder="Table Name"
-        value={tableName}
-        onChange={e => setTableName(e.target.value)}
-      />
-
-      <AddColumn columns={columns} setColumns={setColumns} />
-
-      <button
-        type="submit"
-        className="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600"
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-l from-blue-100 to-purple-400 p-4">
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          createTable();
+        }}
+        className="max-w-xl mx-auto mt-10 p-6 border rounded-lg shadow-sm bg-gray-100 space-y-5"
       >
-        Create Table
-      </button>
-    </form>
+        <h2 className="text-xl font-bold text-center">Create Table</h2>
+
+        <input
+          className="w-full border-black-100 p-2 rounded shadow-md"
+          placeholder="Table Name"
+          value={tableName}
+          onChange={(e) => setTableName(e.target.value)}
+        />
+
+        <AddColumn columns={columns} setColumns={setColumns} />
+
+        <button
+          type="submit"
+          className="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600"
+        >
+          Create Table
+        </button>
+      </form>
+    </div>
   );
 }

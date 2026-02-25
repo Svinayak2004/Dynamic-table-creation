@@ -2,26 +2,24 @@ import React from "react";
 
 const DynamicInput = ({ column, value = "", setData }) => {
   const handleChange = (e) => {
-    setData(prev => ({
+    setData((prev) => ({
       ...prev,
       [column.columnName]: e.target.value,
     }));
   };
 
   return (
-    <div className="flex flex-col gap-1 w-full max-w-md">
-      {/* Label */}
-      <label className="font-medium">
+    <div className="flex flex-col gap-1">
+      <label className="text-sm font-medium text-gray-700">
         {column.label}
       </label>
 
-      {/* Input */}
       <input
         type={column.inputType || "text"}
         name={column.columnName}
         value={value}
         onChange={handleChange}
-        className="border p-2 rounded"
+        className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
       />
     </div>
   );
