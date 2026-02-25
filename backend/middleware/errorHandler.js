@@ -1,13 +1,30 @@
 const errorHandler = (err, req, res, next) => {
-    const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
-    console.log(err.message);
-    res.status(statusCode).json({
-        success : false,
-        message : err
-    });
-    next();
+  let statusCode = res.statusCode === 200 ? 500 : res.statusCode;
+  let message = err.message;
+
+  // Mongoose CastError (Invalid ObjectId)
+  if (err.name === "CastError") {
+    statusCode = 400;
+    message = "Invalid ID format";
+  }
+
+  //Duplicate Key Error
+  if (err.code === 11000) {
+    statusCode = 400;
+    message = `Duplicate value entered for ${Object.keys(err.keyValue)}`;
+  }
+
+  //Validation Error
+  if (err.name === "ValidationError") {
+    statusCode = 400;
+    message = Object.values(err.errors).map(val => val.message).join(", ");
+  }
+
+  res.status(statusCode).json({
+    success: false,
+    message,
+    stack: process.env.NODE_ENV === "production" ? null : err.stack
+  });
 };
 
 export default errorHandler;
-
-// Column validation failed: table: Cast to ObjectId failed for value "undefined" (type string) at path "table" because of "BSONError", label: Path `label` is required., inputType: Path `inputType` is required., dataType: Path `dataType` is required., columnName: Path `columnName` is required.
