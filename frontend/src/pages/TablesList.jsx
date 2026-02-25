@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import API from "../axios/api";
 import { useNavigate, Link } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const TablesList = () => {
   const [tables, setTables] = useState([]);
@@ -23,10 +24,12 @@ const TablesList = () => {
   }, []);
 
   const deleteTable = async (id) => {
+
     if (window.confirm("Are you sure you want to delete this table?")) {
       try {
         await API.delete(`/tables/${id}`);
         setTables(tables.filter((t) => t._id !== id));
+        toast.success("Table deleted"); 
       } catch (err) {
         console.error("Error deleting table:", err);
       }
